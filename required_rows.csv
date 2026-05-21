@@ -1,0 +1,7 @@
+trade_id,created_date,created_timestamp,delivery_date,start_timestamp,end_timestamp,exchange,market_area,bidding_area,contract_name,market_type,commodity,volume,open_price,close_price,settlement_price,high_price,low_price,currency
+1,2026-05-01,2026-05-01 08:00:00.000000,2026-05-02,2026-05-02 00:00:00.000000,2026-05-02 23:59:59.000000,Nord Pool,NO1,NO1,Power Future,Future,Electricity,120,48.50,47.20,48.10,49.00,46.80,EUR
+2,2026-05-01,2026-05-01 08:15:00.000000,2026-05-03,2026-05-03 00:00:00.000000,2026-05-03 23:59:59.000000,Nord Pool,SE1,SE1,Day Ahead,Spot,Electricity,200,50.20,49.50,50.00,51.00,49.00,EUR
+3,2026-05-01,2026-05-01 08:30:00.000000,2026-05-04,2026-05-04 00:00:00.000000,2026-05-04 23:59:59.000000,Nord Pool,DK1,DK1,Intraday,Spot,Electricity,175,47.80,47.00,47.50,48.20,46.90,EUR
+401,2026-05-01,2026-05-01 08:45:00.000000,2026-05-05,2026-05-05 00:00:00.000000,2026-05-05 23:59:59.000000,Nord Pool,FI,FI,Power Future,Future,Electricity,150,49.10,48.40,48.90,49.70,47.80,EUR
+501,2026-05-01,2026-05-01 09:00:00.000000,2026-05-06,2026-05-06 00:00:00.000000,2026-05-06 23:59:59.000000,Nord Pool,NO2,NO2,Day Ahead,Spot,Electricity,210,51.30,50.80,51.00,52.00,50.20,EUR
+601,2026-05-01,2026-05-01 09:15:00.000000,2026-05-07,2026-05-07 00:00:00.000000,2026-05-07 23:59:59.000000,Nord Pool,SE2,SE2,Intraday,Spot,Electricity,190,48.90,48.10,48.60,49.40,47.70,EUR
