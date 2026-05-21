@@ -7,10 +7,7 @@ from botocore.exceptions import ClientError
 
 logger = logging.getLogger(__name__)
 
-
 class AthenaConnector:
-    """Handles query execution against AWS Athena."""
-
     POLL_INTERVAL_SECONDS = 2
     TERMINAL_STATES = {"SUCCEEDED", "FAILED", "CANCELLED"}
 
@@ -70,9 +67,7 @@ class AthenaConnector:
 
         return pd.DataFrame(rows, columns=header) if header else pd.DataFrame()
 
-
 class S3Connector:
-    """Handles reading from and writing to AWS S3."""
 
     def __init__(self, region: str):
         self.region   = region

@@ -1,5 +1,3 @@
-
-
 import logging
 import pandas as pd
 from datetime import datetime, timezone
@@ -7,14 +5,8 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-
-
-
 def run_timestamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-
-
-
 
 def make_result_record(
     test_name: str,
@@ -36,10 +28,8 @@ def make_result_record(
         "run_at":          run_timestamp(),
     }
 
-
 def summarise_results(results: list[dict]) -> pd.DataFrame:
     return pd.DataFrame(results)
-
 
 def enrich_violation_df(df: pd.DataFrame, test_name: str, test_type: str) -> pd.DataFrame:
     df = df.copy()
@@ -49,11 +39,8 @@ def enrich_violation_df(df: pd.DataFrame, test_name: str, test_type: str) -> pd.
         df.insert(2, "_test_type", test_type)
     return df
 
-
 def has_violations(df: pd.DataFrame) -> bool:
     return len(df) > 0
-
-
 
 def find_missing_rows(
     required_df: pd.DataFrame,
@@ -76,16 +63,12 @@ def find_missing_rows(
     logger.warning(f"Found {len(missing)} missing required row(s).")
     return missing
 
-
-
 def build_s3_key(prefix: str, test_name: str, timestamp: str) -> str:
     return f"{prefix.rstrip('/')}/{timestamp}/{test_name}.csv"
 
 
 def build_summary_s3_key(prefix: str, timestamp: str) -> str:
     return f"{prefix.rstrip('/')}/{timestamp}/_summary.csv"
-
-
 
 def parse_athena_schema(describe_df: pd.DataFrame) -> dict[str, str]:
     schema: dict[str, str] = {}
@@ -96,7 +79,6 @@ def parse_athena_schema(describe_df: pd.DataFrame) -> dict[str, str]:
             continue
         schema[col_name] = data_type
     return schema
-
 
 def configure_logging(level: str = "INFO") -> None:
     numeric_level = getattr(logging, level.upper(), logging.INFO)

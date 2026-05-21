@@ -3,30 +3,23 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-
-
 def _qualify(database: str, table: str) -> str:
     return f'"{database}"."{table}"'
-
 
 def _col(name: str) -> str:
     return f'"{name}"'
 
-
-
 def sql_not_null_single(database: str, table: str, column: str, max_rows: int = 1000) -> str:
     sql = f"""
-SELECT *,
-       'not_null_single'          AS _test_type,
-       {_col(column)!r}           AS _failed_column
-FROM   {_qualify(database, table)}
-WHERE  {_col(column)} IS NULL
-LIMIT  {max_rows}
-""".strip()
+           SELECT *,
+                  'not_null_single'          AS _test_type,
+                  {_col(column)!r}           AS _failed_column
+           FROM   {_qualify(database, table)}
+           WHERE  {_col(column)} IS NULL
+           LIMIT  {max_rows}
+           """.strip()
     logger.debug(f"[not_null_single] column={column}\n{sql}")
     return sql
-
-
 
 def sql_not_null_composite(database: str, table: str, columns: list[str], max_rows: int = 1000) -> str:
     null_checks = " OR ".join(f"{_col(c)} IS NULL" for c in columns)
@@ -37,41 +30,37 @@ def sql_not_null_composite(database: str, table: str, columns: list[str], max_ro
     failed_col_expr = " || ".join(case_parts)
 
     sql = f"""
-SELECT *,
-       'not_null_composite'       AS _test_type,
-       ({failed_col_expr})        AS _failed_column
-FROM   {_qualify(database, table)}
-WHERE  {null_checks}
-LIMIT  {max_rows}
-""".strip()
+            SELECT *,
+                   'not_null_composite'       AS _test_type,
+                   ({failed_col_expr})        AS _failed_column
+            FROM   {_qualify(database, table)}
+            WHERE  {null_checks}
+            LIMIT  {max_rows}
+            """.strip()
     logger.debug(f"[not_null_composite] columns={columns}\n{sql}")
     return sql
-
-
 
 def sql_no_duplicates(database: str, table: str, columns: list[str], max_rows: int = 1000) -> str:
     col_list   = ", ".join(_col(c) for c in columns)
     key_concat = " || '|' || ".join(f"CAST({_col(c)} AS VARCHAR)" for c in columns)
 
     sql = f"""
-WITH counted AS (
-    SELECT *,
-           COUNT(*) OVER (PARTITION BY {col_list}) AS _dup_count,
-           ({key_concat})                           AS _duplicate_key
-    FROM   {_qualify(database, table)}
-)
-SELECT *,
-       'no_duplicates'   AS _test_type,
-       '{', '.join(columns)}' AS _failed_column
-FROM   counted
-WHERE  _dup_count > 1
-ORDER  BY _duplicate_key
-LIMIT  {max_rows}
-""".strip()
+            WITH counted AS (
+                SELECT *,
+                       COUNT(*) OVER (PARTITION BY {col_list}) AS _dup_count,
+                       ({key_concat})                           AS _duplicate_key
+                FROM   {_qualify(database, table)}
+            )
+            SELECT *,
+                   'no_duplicates'   AS _test_type,
+                   '{', '.join(columns)}' AS _failed_column
+            FROM   counted
+            WHERE  _dup_count > 1
+            ORDER  BY _duplicate_key
+            LIMIT  {max_rows}
+            """.strip()
     logger.debug(f"[no_duplicates] columns={columns}\n{sql}")
     return sql
-
-
 
 _DTYPE_EXPRESSIONS: dict[str, str] = {
     "integer":   "TRY_CAST({col} AS BIGINT) IS NULL AND {col} IS NOT NULL",
@@ -85,7 +74,6 @@ _DTYPE_EXPRESSIONS: dict[str, str] = {
     "varchar":   "FALSE",
 }
 
-
 def sql_datatype_check(
     database: str, table: str, column: str, expected_type: str, max_rows: int = 1000
 ) -> str:
@@ -97,30 +85,26 @@ def sql_datatype_check(
     condition = _DTYPE_EXPRESSIONS[expected_type].format(col=_col(column))
 
     sql = f"""
-SELECT *,
-       'datatype_mismatch'        AS _test_type,
-       {_col(column)!r}           AS _failed_column,
-       '{expected_type}'          AS _expected_type,
-       CAST({_col(column)} AS VARCHAR) AS _actual_value
-FROM   {_qualify(database, table)}
-WHERE  {condition}
-LIMIT  {max_rows}
-""".strip()
+            SELECT *,
+                   'datatype_mismatch'        AS _test_type,
+                   {_col(column)!r}           AS _failed_column,
+                   '{expected_type}'          AS _expected_type,
+                   CAST({_col(column)} AS VARCHAR) AS _actual_value
+            FROM   {_qualify(database, table)}
+            WHERE  {condition}
+            LIMIT  {max_rows}
+            """.strip()
     logger.debug(f"[datatype_check] column={column}, expected={expected_type}\n{sql}")
     return sql
-
-
 
 def sql_fetch_key_columns(database: str, table: str, columns: list[str]) -> str:
     col_list = ", ".join(_col(c) for c in columns)
     sql = f"""
-SELECT {col_list}
-FROM   {_qualify(database, table)}
-""".strip()
+        SELECT {col_list}
+        FROM   {_qualify(database, table)}
+        """.strip()
     logger.debug(f"[fetch_key_columns] columns={columns}\n{sql}")
     return sql
-
-
 
 def build_all_queries(
     database: str,

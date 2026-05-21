@@ -1,5 +1,3 @@
-
-
 import sys
 import logging
 import pandas as pd
@@ -33,17 +31,12 @@ logger = logging.getLogger(__name__)
 import os
 AWS_REGION = os.environ.get("AWS_DEFAULT_REGION", "ap-south-1")
 
-
-
 def run_tests() -> None:
     configure_logging(SETTINGS["log_level"])
     ts = run_timestamp()
 
-    logger.info("=" * 60)
-    logger.info("DE Test Framework — run started")
     logger.info(f"Table  : {TABLE_CONFIG['database']}.{TABLE_CONFIG['table']}")
     logger.info(f"Run ID : {ts}")
-    logger.info("=" * 60)
 
     athena, s3 = get_connectors(
         region=AWS_REGION,
